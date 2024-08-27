@@ -19,12 +19,16 @@ COURSES_FIELDS = [field.name for field in fields(Course)]
 def get_single_course(soup: BeautifulSoup) -> Course:
     return Course(
         name=soup.select_one(".ProfessionCard_title__Zq5ZY").text,
-        short_description=soup.select_one(".ProfessionCard_cardWrapper__JQBNJ > .mb-32").text,
-        duration=soup.select_one(".ProfessionCard_subtitle__K1Yp6").text.split("•")[0],
+        short_description=soup.select_one(
+            ".ProfessionCard_cardWrapper__JQBNJ > .mb-32"
+        ).text,
+        duration=soup.select_one(
+            ".ProfessionCard_subtitle__K1Yp6")
+        .text.split("•")[0],
     )
 
 
-def fetch_and_parse():
+def fetch_and_parse() -> BeautifulSoup:
     courses = requests.get(BASE_URL).content
     soup = BeautifulSoup(courses, "html.parser")
     return soup
@@ -46,10 +50,9 @@ def write_to_csv() -> None:
         writer.writerows([astuple(course) for course in all_courses])
 
 
-def main():
+def main() -> None:
     write_to_csv()
 
 
 if __name__ == "__main__":
     main()
-
